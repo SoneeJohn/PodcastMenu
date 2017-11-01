@@ -8,6 +8,7 @@
 
 import Cocoa
 import WebKit
+import Reachability
 
 protocol OvercastLoudnessDelegate {
     func loudnessDidChange(_ value: Double)
@@ -28,6 +29,8 @@ class OvercastController: NSObject, WKNavigationDelegate {
     fileprivate let webView: WKWebView
     fileprivate let bridge: OvercastJavascriptBridge
     
+    fileprivate let reachability = Reachability()
+    
     fileprivate var mediaKeysHandler = MediaKeysHandler()
     
     fileprivate lazy var userScript: WKUserScript = {
@@ -47,6 +50,18 @@ class OvercastController: NSObject, WKNavigationDelegate {
         
         NSWorkspace.shared().notificationCenter.addObserver(forName: Notification.Name.NSWorkspaceDidWake, object: NSWorkspace.shared(), queue: nil) { [weak self] _ in
             self?.refreshPodcastsIfNeeded()
+        }
+        
+        reachability?.whenReachable = { [weak self] reachability in
+            self?.refreshPodcastsIfNeeded();
+        }
+        
+        do {
+            try reachability?.startNotifier()
+        } catch {
+            #if DEBUG
+                NSLog("[OvercastController] Could not start reachability notifier")
+            #endif
         }
     }
     
@@ -93,6 +108,10 @@ class OvercastController: NSObject, WKNavigationDelegate {
         NotificationCenter.default.addObserver(forName: Notification.Name.OvercastCommandTogglePlaying, object: nil, queue: nil) { [weak self] _ in
             self?.handlePlayPauseButton()
         }
+    }
+    
+    deinit {
+        reachability?.stopNotifier()
     }
     
     func isValidOvercastURL(_ URL: Foundation.URL) -> Bool {
