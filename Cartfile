@@ -3,3 +3,5 @@ github "SwiftyJSON/SwiftyJSON" ~> 3.1
 github "Instagram/IGListKit" ~> 2.0.0
 
 github "sparkle-project/Sparkle" ~> 1.17
+
+github "ashleymills/Reachability.swift"
