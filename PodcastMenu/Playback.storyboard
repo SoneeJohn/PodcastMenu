@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="XEv-g1-3RH">
     <dependencies>
         <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.AVKitIBPlugin" version="13196"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,20 +15,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="308" height="340"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fUk-ub-2a4">
-                                <rect key="frame" x="122" y="122" width="64" height="96"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="🙈" id="j1c-po-mbY">
-                                    <font key="font" size="60" name="AppleColorEmoji"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                            <avPlayerView controlsStyle="floating" translatesAutoresizingMaskIntoConstraints="NO" id="JH7-vY-rg6">
+                                <rect key="frame" x="0.0" y="0.0" width="308" height="305"/>
+                            </avPlayerView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3OO-Zf-B1y">
+                                <rect key="frame" x="14" y="305" width="49" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="37" id="BzT-X3-zdA"/>
+                                    <constraint firstAttribute="height" constant="21" id="EvY-yJ-r8i"/>
+                                </constraints>
+                                <buttonCell key="cell" type="push" title="&lt;" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="xZ3-Oa-Fou">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="fUk-ub-2a4" firstAttribute="centerX" secondItem="xOk-Fl-QRn" secondAttribute="centerX" id="e2b-Ae-qcF"/>
-                            <constraint firstItem="fUk-ub-2a4" firstAttribute="centerY" secondItem="xOk-Fl-QRn" secondAttribute="centerY" id="qgc-iq-4Yw"/>
+                            <constraint firstItem="3OO-Zf-B1y" firstAttribute="leading" secondItem="xOk-Fl-QRn" secondAttribute="leading" constant="20" id="9lN-Ii-6ga"/>
+                            <constraint firstItem="JH7-vY-rg6" firstAttribute="top" secondItem="3OO-Zf-B1y" secondAttribute="bottom" constant="7" id="K6Q-6B-Jro"/>
+                            <constraint firstItem="JH7-vY-rg6" firstAttribute="top" secondItem="xOk-Fl-QRn" secondAttribute="top" constant="35" id="VWl-oR-VnM"/>
+                            <constraint firstAttribute="trailing" secondItem="3OO-Zf-B1y" secondAttribute="trailing" constant="251" id="eV3-oX-bTf"/>
+                            <constraint firstItem="JH7-vY-rg6" firstAttribute="leading" secondItem="xOk-Fl-QRn" secondAttribute="leading" id="jgJ-PI-xyr"/>
+                            <constraint firstAttribute="trailing" secondItem="JH7-vY-rg6" secondAttribute="trailing" id="mM4-dO-7ZW"/>
+                            <constraint firstItem="3OO-Zf-B1y" firstAttribute="top" secondItem="xOk-Fl-QRn" secondAttribute="top" constant="7" id="sSg-Xt-LI4"/>
+                            <constraint firstAttribute="bottom" secondItem="JH7-vY-rg6" secondAttribute="bottom" id="yWK-3J-MZb"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="playerView" destination="JH7-vY-rg6" id="5EL-bV-AV1"/>
+                    </connections>
                 </viewController>
                 <customObject id="DKo-7w-yeH" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

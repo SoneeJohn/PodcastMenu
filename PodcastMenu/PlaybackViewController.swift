@@ -7,16 +7,17 @@
 //
 
 import Cocoa
+import AVKit
 
 final class PlaybackViewController: NSViewController {
 
     var playbackURL: URL? {
         didSet {
             guard oldValue != playbackURL else { return }
-            
-            play()
+            playerView.player = AVPlayer(url: playbackURL!)
         }
     }
+    @IBOutlet weak var playerView: AVPlayerView!
     
     static func instantiate() -> PlaybackViewController {
         let storyboard = NSStoryboard(name: "Playback", bundle: nil)
