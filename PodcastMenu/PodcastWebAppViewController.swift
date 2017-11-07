@@ -188,6 +188,7 @@ class PodcastWebAppViewController: NSViewController {
     }
     
     func dismissPlaybackViewController() {
+        guard playbackController != nil else { return }
         shouldFadeWebView = true
         
         NSAnimationContext.beginGrouping()
