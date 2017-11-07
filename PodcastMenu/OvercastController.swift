@@ -90,6 +90,10 @@ class OvercastController: NSObject, WKNavigationDelegate {
         return Constants.allowedHosts.contains(host)
     }
     
+    func isValidOvercastEpisodeURL(_ URL: Foundation.URL) -> Bool {
+         return URL.path.hasPrefix(Constants.episodePrefixPath)
+    }
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         // the default is to allow the navigation
         var decision = WKNavigationActionPolicy.allow
@@ -107,7 +111,7 @@ class OvercastController: NSObject, WKNavigationDelegate {
             return
         }
         
-        if url.path != Constants.homePath {
+        if isValidOvercastEpisodeURL(url) {
             navigationDelegate?.navigateToPlayback()
         } else {
             navigationDelegate?.dismissPlayback()
