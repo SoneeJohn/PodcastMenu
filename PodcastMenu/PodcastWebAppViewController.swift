@@ -505,9 +505,11 @@ extension PodcastWebAppViewController: OvercastNavigationDelegate {
         }
     }
     
-    func dismissPlayback() {
+    func dismissPlayback(navigateTo url: URL?) {
         DispatchQueue.main.async {
             self.dismissPlaybackViewController()
+            guard (url != nil) else { return }
+            self.webView.load(URLRequest(url: url!))
         }
     }
     

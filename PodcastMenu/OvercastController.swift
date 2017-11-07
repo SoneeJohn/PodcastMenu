@@ -16,7 +16,7 @@ protocol OvercastLoudnessDelegate {
 protocol OvercastNavigationDelegate: class {
     func navigateToPlayback()
     func requestPlaybackAudio(at url: URL)
-    func dismissPlayback()
+    func dismissPlayback(navigateTo url: URL?)
 }
 
 extension Notification.Name {
@@ -36,6 +36,9 @@ class OvercastController: NSObject, WKNavigationDelegate {
     
     fileprivate let webView: WKWebView
     fileprivate let bridge: OvercastJavascriptBridge
+    
+    //The last Overcast URL (any valid Overcast URL that isn't a episode URL)
+    fileprivate var latestOvercastURL: URL?
     
     fileprivate var mediaKeysHandler = MediaKeysHandler()
     
@@ -84,7 +87,7 @@ class OvercastController: NSObject, WKNavigationDelegate {
         }
         
         NotificationCenter.default.addObserver(forName: Notification.Name.PlaybackViewControllerDidRequestDismissal, object: nil, queue: nil) { [weak self] _ in
-            self?.navigationDelegate?.dismissPlayback()
+            self?.navigationDelegate?.dismissPlayback(navigateTo: self?.latestOvercastURL)
         }
     }
     
@@ -115,11 +118,10 @@ class OvercastController: NSObject, WKNavigationDelegate {
             return
         }
         
-        if isValidOvercastEpisodeURL(url) {
-            navigationDelegate?.navigateToPlayback()
-        } else {
-            navigationDelegate?.dismissPlayback()
-        }
+        guard isValidOvercastEpisodeURL(url) else { return }
+        
+        navigationDelegate?.navigateToPlayback()
+        
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -129,6 +131,11 @@ class OvercastController: NSObject, WKNavigationDelegate {
             } else {
                 NotificationCenter.default.post(name: .OvercastIsNotOnEpisodePage, object: nil)
                 self.stopPlaybackInfoTimer()
+            }
+            guard let url = webView.url else { return }
+            
+            if self.isValidOvercastEpisodeURL(url) == false {
+                self.latestOvercastURL = url
             }
         }
     }
