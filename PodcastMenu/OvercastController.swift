@@ -82,6 +82,10 @@ class OvercastController: NSObject, WKNavigationDelegate {
             
             self?.navigationDelegate?.requestPlaybackAudio(at: url)
         }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name.PlaybackViewControllerDidRequestDismissal, object: nil, queue: nil) { [weak self] _ in
+            self?.navigationDelegate?.dismissPlayback()
+        }
     }
     
     func isValidOvercastURL(_ URL: Foundation.URL) -> Bool {

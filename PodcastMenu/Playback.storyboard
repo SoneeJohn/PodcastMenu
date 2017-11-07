@@ -28,6 +28,9 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="dismissAction:" target="XEv-g1-3RH" id="8It-p8-th2"/>
+                                </connections>
                             </button>
                         </subviews>
                         <constraints>

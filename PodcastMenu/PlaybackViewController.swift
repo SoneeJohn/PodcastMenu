@@ -9,6 +9,10 @@
 import Cocoa
 import AVKit
 
+extension Notification.Name {
+    static let PlaybackViewControllerDidRequestDismissal = Notification.Name("PlaybackViewControllerDidRequestDismissal")
+}
+
 final class PlaybackViewController: NSViewController {
 
     var playbackURL: URL? {
@@ -41,6 +45,9 @@ final class PlaybackViewController: NSViewController {
     
     @objc func pause() {
         PlaybackManager.shared.pause()
+    }
+    @IBAction func dismissAction(_ sender: NSButton) {
+        NotificationCenter.default.post(name: .PlaybackViewControllerDidRequestDismissal, object: nil)
     }
     
 }
