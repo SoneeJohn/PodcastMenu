@@ -165,13 +165,7 @@ class EpisodeDownloadOperation: Operation, NSCoding {
             //TODO: Return and report error
             return
         }
-        
-        switch type {
-        case .Audio: break
-        // TODO: Process audio
-        case .PlayPage:
-            self.processPlayPage(data: data, response: response!)
-        }
+        self.processPlayPage(data: data, response: response!)
     }
     
     fileprivate func processPlayPage(data: Data?, response: URLResponse) {
