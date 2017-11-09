@@ -127,6 +127,15 @@ class EpisodeDownloadOperation: Operation, NSCoding {
         }
 
         guard type == .PlayPage else {
+            //Create folder to store file
+            do {
+                try FileManager.default.createDirectory(at: saveLocation, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                //Folder couldn't be created, it makes no sense to continue operation
+                //TODO: Finish with error
+                return
+            }
+            
             downloadTask = session.downloadTask(with: url)
             downloadTask?.resume()
             return
