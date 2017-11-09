@@ -118,14 +118,6 @@ class EpisodeDownloadOperation: Operation, NSCoding {
     //MARK: - Request Dispatch
     
     fileprivate func startRequest(url: URL, type: RequestType) {
-        if type == .PlayPage {
-            guard episode.link != nil else {
-                //TODO: Return and report error
-                
-                return
-            }
-        }
-
         guard type == .PlayPage else {
             //Create folder to store file
             do {
