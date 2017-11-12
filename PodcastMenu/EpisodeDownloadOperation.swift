@@ -11,18 +11,21 @@ import Foundation
 //MARK: - Operation
 
 extension EpisodeDownloadOperation {
-    override var isExecuting : Bool {
-        get { return _executing }
+    
+    override var isExecuting: Bool { return state == .executing }
+    override var isFinished: Bool { return state == .finished }
+    
+    fileprivate enum State: String {
+        case ready = "Ready"
+        case executing = "Executing"
+        case finished = "Finished"
+        fileprivate var keyPath: String { return "is" + self.rawValue }
     }
     
-    override var isFinished : Bool {
-        get { return _finished }
-    }
     
     override func start() {
         guard isCancelled == false else { return }
-        _executing = true
-        
+        state = .executing
         self.startRequest(url: episode.link!, type: .PlayPage)
     }
     
@@ -41,30 +44,11 @@ extension EpisodeDownloadOperation {
     
 }
 
-//MARK:- KVO
-
-extension EpisodeDownloadOperation {
-    override class func automaticallyNotifiesObservers(forKey key: String) -> Bool {
-   
-        if key == "isExecuting" || key == "isFinished" {
-            return true
-        }
-        
-        return super.automaticallyNotifiesObservers(forKey: key)
-    }
-}
-
 extension EpisodeDownloadOperation {
     
     fileprivate enum RequestType: Int {
         case PlayPage = 0
         case Audio = 1
-    }
-}
-
-extension Equatable {
-    static func == (lhs: EpisodeDownloadOperation, rhs: EpisodeDownloadOperation) -> Bool {
-        return lhs.identifier == rhs.identifier && lhs.episode == rhs.episode
     }
 }
 
@@ -75,16 +59,14 @@ extension EpisodeDownloadOperation: URLSessionDownloadDelegate {
         } catch  {
             //TODO: Finish with error
         }
-        
-         _finished = true
-         _executing = false
+
+         state = .finished
     }
 }
 
 class EpisodeDownloadOperation: Operation, NSCoding {
     func encode(with coder: NSCoder) {
-        coder.encode(_executing, forKey: "_executing")
-        coder.encode(_finished, forKey: "_finished")
+        coder.encode(state, forKey: "state")
         coder.encode(episode, forKey: "episode")
         coder.encode(saveLocation, forKey: "saveLocation")
         coder.encode(identifier, forKey: "identifier")
@@ -92,14 +74,13 @@ class EpisodeDownloadOperation: Operation, NSCoding {
     
     required init?(coder decoder: NSCoder) {
         self.episode = decoder.decodeObject(forKey: "episode") as! Episode
-        self._executing = decoder.decodeBool(forKey: "_executing")
-        self._finished = decoder.decodeBool(forKey: "_finished")
         self.saveLocation = decoder.decodeObject(forKey: "saveLocation") as! URL
+        self.state = decoder.decodeObject(forKey: "identifier") as! State
         self.identifier = decoder.decodeObject(forKey: "identifier") as! String
     }
     
-    
     //MARK: - Properties
+    
     public let episode: Episode
     public let saveLocation: URL
     fileprivate lazy var session: URLSession = {
@@ -108,11 +89,19 @@ class EpisodeDownloadOperation: Operation, NSCoding {
     
     fileprivate var dataTask: URLSessionDataTask?
     fileprivate var downloadTask: URLSessionDownloadTask?
-
-    fileprivate var _executing : Bool = false
-    fileprivate var _finished : Bool = false
     
     public let identifier: String
+    
+    fileprivate var state = State.ready {
+        willSet {
+            willChangeValue(forKey: state.keyPath)
+            willChangeValue(forKey: newValue.keyPath)
+        }
+        didSet {
+            didChangeValue(forKey: state.keyPath)
+            didChangeValue(forKey: oldValue.keyPath)
+        }
+    }
     
     //MARK: - Init
     
