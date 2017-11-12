@@ -62,6 +62,12 @@ extension EpisodeDownloadOperation {
     }
 }
 
+extension Equatable {
+    static func == (lhs: EpisodeDownloadOperation, rhs: EpisodeDownloadOperation) -> Bool {
+        return lhs.identifier == rhs.identifier && lhs.episode == rhs.episode
+    }
+}
+
 extension EpisodeDownloadOperation: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         do {
