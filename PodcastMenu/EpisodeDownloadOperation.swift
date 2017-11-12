@@ -81,6 +81,7 @@ class EpisodeDownloadOperation: Operation, NSCoding {
         coder.encode(_finished, forKey: "_finished")
         coder.encode(episode, forKey: "episode")
         coder.encode(saveLocation, forKey: "saveLocation")
+        coder.encode(identifier, forKey: "identifier")
     }
     
     required init?(coder decoder: NSCoder) {
@@ -88,6 +89,7 @@ class EpisodeDownloadOperation: Operation, NSCoding {
         self._executing = decoder.decodeBool(forKey: "_executing")
         self._finished = decoder.decodeBool(forKey: "_finished")
         self.saveLocation = decoder.decodeObject(forKey: "saveLocation") as! URL
+        self.identifier = decoder.decodeObject(forKey: "identifier") as! String
     }
     
     
@@ -104,6 +106,7 @@ class EpisodeDownloadOperation: Operation, NSCoding {
     fileprivate var _executing : Bool = false
     fileprivate var _finished : Bool = false
     
+    public let identifier: String
     
     //MARK: - Init
     
@@ -111,6 +114,7 @@ class EpisodeDownloadOperation: Operation, NSCoding {
         guard episode.link != nil else { return nil }
         self.episode = episode
         self.saveLocation = saveLocation
+        self.identifier = episode.link!.lastPathComponent
         super.init()
 
     }
