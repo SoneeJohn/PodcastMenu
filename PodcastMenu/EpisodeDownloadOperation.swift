@@ -37,9 +37,10 @@ extension EpisodeDownloadOperation {
     
     override func cancel() {
         guard isCancelled == false || isFinished == false else { return }
-        
         downloadTask?.cancel()
         dataTask?.cancel()
+        state = .finished
+        super.cancel()
     }
     
 }
