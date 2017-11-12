@@ -197,4 +197,18 @@ class EpisodeDownloadOperation: Operation, NSCoding {
         
         startRequest(url: audioURL!, type: .Audio)
     }
+    
+    //MARK:- NSObject
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        guard object != nil else { return false }
+        guard object is EpisodeDownloadOperation == true else { return false }
+        
+        let obj = object as! EpisodeDownloadOperation
+        return self.identifier == obj.identifier
+   }
+    
+    override var hash : Int {
+        return identifier.hashValue
+    }
 }
